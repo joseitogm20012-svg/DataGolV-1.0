@@ -1,0 +1,22 @@
+<% if (typeof mensaje !== 'undefined' && mensaje) { %>
+    <div class="alert alert-<%= typeof tipoMensaje !== 'undefined' ? tipoMensaje : 'success' %> alert-dismissible fade show shadow-sm" role="alert">
+        <i class="bi bi-info-circle-fill me-2"></i>
+        <%= mensaje %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
+
+<% if (typeof errores !== 'undefined' && errores && errores.length > 0) { %>
+    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+        <div class="d-flex align-items-center mb-1">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Por favor corrige los siguientes errores:</strong>
+        </div>
+        <ul class="mb-0 ps-3">
+            <% errores.forEach(err => { %>
+                <li><%= err %></li>
+            <% }) %>
+        </ul>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>

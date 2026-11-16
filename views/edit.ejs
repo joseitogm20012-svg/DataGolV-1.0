@@ -1,0 +1,134 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<main class="container my-4 flex-grow-1" style="max-width: 900px;">
+    <%- include('partials/alerts') %>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <a href="/" class="text-decoration-none text-muted small"><i class="bi bi-arrow-left me-1"></i> Volver al panel</a>
+            <h2 class="h3 fw-bold mt-1 mb-0"><i class="bi bi-pencil-square text-warning me-2"></i>Editar Pronóstico / Registrar Resultado</h2>
+        </div>
+        <span class="badge <%= prediction.estado === 'Acertada' ? 'bg-success' : prediction.estado === 'Fallada' ? 'bg-danger' : 'bg-warning text-dark' %> px-3 py-2">
+            Estado: <%= prediction.estado %>
+        </span>
+    </div>
+
+    <div class="card bg-dark-subtle border-secondary border-opacity-50 shadow-lg rounded-4">
+        <div class="card-body p-4 p-md-5">
+            <form action="/predictions/<%= prediction._id %>?_method=PUT" method="POST">
+
+                <!-- 1. SECCIÓN DE RESULTADO REAL (POST-PARTIDO) -->
+                <div class="p-3 mb-4 rounded-3 border border-warning border-opacity-50 bg-dark">
+                    <h5 class="fw-semibold text-warning mb-2">
+                        <i class="bi bi-trophy me-1"></i> Registrar Resultado Final Real
+                    </h5>
+                    <p class="text-muted small mb-3">
+                        Si el partido ya se disputó, ingresa el marcador real y el sistema calculará automáticamente si el pronóstico fue <strong>Acertado</strong> o <strong>Fallado</strong>.
+                    </p>
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-5">
+                            <label class="form-label small text-muted">Goles Reales <%= prediction.equipoLocal %></label>
+                            <input type="number" min="0" max="25" class="form-control bg-dark border-secondary border-opacity-50 text-light fw-bold" 
+                                   name="golesLocalReal" value="<%= prediction.golesLocalReal !== null ? prediction.golesLocalReal : '' %>" placeholder="Pendiente">
+                        </div>
+                        <div class="col-md-2 text-center text-muted fw-bold">VS</div>
+                        <div class="col-md-5">
+                            <label class="form-label small text-muted">Goles Reales <%= prediction.equipoVisitante %></label>
+                            <input type="number" min="0" max="25" class="form-control bg-dark border-secondary border-opacity-50 text-light fw-bold" 
+                                   name="golesVisitanteReal" value="<%= prediction.golesVisitanteReal !== null ? prediction.golesVisitanteReal : '' %>" placeholder="Pendiente">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. DATOS DEL PARTIDO -->
+                <h5 class="fw-semibold text-light mb-3 border-bottom border-secondary border-opacity-25 pb-2">
+                    <i class="bi bi-info-circle me-1"></i> Información General
+                </h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="equipoLocal" class="form-label fw-semibold">Equipo Local</label>
+                        <input type="text" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               id="equipoLocal" name="equipoLocal" value="<%= prediction.equipoLocal %>" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="equipoVisitante" class="form-label fw-semibold">Equipo Visitante</label>
+                        <input type="text" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               id="equipoVisitante" name="equipoVisitante" value="<%= prediction.equipoVisitante %>" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="liga" class="form-label fw-semibold">Competición</label>
+                        <input type="text" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               id="liga" name="liga" value="<%= prediction.liga %>" required>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="fechaPartido" class="form-label fw-semibold">Fecha del Encuentro</label>
+                        <input type="date" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               id="fechaPartido" name="fechaPartido" 
+                               value="<%= new Date(prediction.fechaPartido).toISOString().split('T')[0] %>" required>
+                    </div>
+                </div>
+
+                <!-- 3. MARCADOR Y PRONÓSTICO PREDICHO -->
+                <h5 class="fw-semibold text-light mb-3 border-bottom border-secondary border-opacity-25 pb-2">
+                    <i class="bi bi-bullseye me-1"></i> Predicción Estimada
+                </h5>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Goles Predichos Local</label>
+                        <input type="number" min="0" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               name="golesLocalPredicho" value="<%= prediction.golesLocalPredicho %>" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Goles Predichos Visitante</label>
+                        <input type="number" min="0" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               name="golesVisitantePredicho" value="<%= prediction.golesVisitantePredicho %>" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Pronóstico Recomendado</label>
+                        <select name="pronosticoRecomendado" class="form-select bg-dark border-secondary border-opacity-50 text-light" required>
+                            <option value="Gana Local" <%= prediction.pronosticoRecomendado === 'Gana Local' ? 'selected' : '' %>>Gana Local</option>
+                            <option value="Empate" <%= prediction.pronosticoRecomendado === 'Empate' ? 'selected' : '' %>>Empate</option>
+                            <option value="Gana Visitante" <%= prediction.pronosticoRecomendado === 'Gana Visitante' ? 'selected' : '' %>>Gana Visitante</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Factor Clave</label>
+                        <input type="text" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               name="factorClave" value="<%= prediction.factorClave %>">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label">Estado Manual (si no hay marcador real)</label>
+                        <select name="estado" class="form-select bg-dark border-secondary border-opacity-50 text-light">
+                            <option value="Pendiente" <%= prediction.estado === 'Pendiente' ? 'selected' : '' %>>Pendiente</option>
+                            <option value="Acertada" <%= prediction.estado === 'Acertada' ? 'selected' : '' %>>Acertada</option>
+                            <option value="Fallada" <%= prediction.estado === 'Fallada' ? 'selected' : '' %>>Fallada</option>
+                        </select>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label">Análisis / Observaciones</label>
+                        <textarea class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                                  name="analisis" rows="3"><%= prediction.analisis %></textarea>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3 pt-3 border-top border-secondary border-opacity-25">
+                    <a href="/" class="btn btn-outline-secondary px-4">Cancelar</a>
+                    <button type="submit" class="btn btn-warning px-4 fw-semibold text-dark">
+                        <i class="bi bi-arrow-repeat me-1"></i> Actualizar Pronóstico
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,207 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<main class="container my-4 flex-grow-1">
+    <%- include('partials/alerts') %>
+
+    <!-- Encabezado y KPIs del Dashboard -->
+    <div class="row align-items-center mb-4 g-3">
+        <div class="col-md-7">
+            <h1 class="h3 fw-bold mb-1 d-flex align-items-center gap-2">
+                <i class="bi bi-graph-up-arrow text-success"></i> Panel de Pronósticos Deportivos
+            </h1>
+            <p class="text-muted mb-0">Gestión de predicciones con IA estadística y seguimiento de efectividad.</p>
+        </div>
+        <div class="col-md-5 text-md-end">
+            <a href="/predictions/new" class="btn btn-success px-4 py-2 rounded-pill fw-semibold shadow">
+                <i class="bi bi-plus-lg me-1"></i> Predecir Nuevo Partido
+            </a>
+        </div>
+    </div>
+
+    <!-- Tarjetas de Estadísticas (KPIs) -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="card bg-dark-subtle border-secondary border-opacity-25 h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small text-uppercase fw-semibold mb-1">Total Registros</div>
+                    <div class="fs-2 fw-bold"><%= stats.total %></div>
+                    <div class="text-muted small"><i class="bi bi-calendar-event me-1"></i>Partidos gestionados</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card bg-dark-subtle border-secondary border-opacity-25 h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small text-uppercase fw-semibold mb-1">Acertadas</div>
+                    <div class="fs-2 fw-bold text-success"><%= stats.acertadas %></div>
+                    <div class="text-muted small"><i class="bi bi-check-circle me-1"></i>Pronósticos cumplidos</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card bg-dark-subtle border-secondary border-opacity-25 h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small text-uppercase fw-semibold mb-1">Pendientes</div>
+                    <div class="fs-2 fw-bold text-warning"><%= stats.pendientes %></div>
+                    <div class="text-muted small"><i class="bi bi-hourglass-split me-1"></i>En espera de resultado</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card bg-dark-subtle border-secondary border-opacity-25 h-100 shadow-sm">
+                <div class="card-body">
+                    <div class="text-muted small text-uppercase fw-semibold mb-1">Efectividad</div>
+                    <div class="fs-2 fw-bold text-info"><%= stats.efectividad %>%</div>
+                    <div class="text-muted small"><i class="bi bi-pie-chart me-1"></i>Acierto sobre finalizados</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Barra de Filtros -->
+    <div class="card bg-dark-subtle border-secondary border-opacity-25 p-3 mb-4 shadow-sm">
+        <form method="GET" action="/" class="row g-2 align-items-center">
+            <div class="col-12 col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-secondary border-opacity-50 text-muted"><i class="bi bi-trophy"></i></span>
+                    <select name="liga" class="form-select bg-dark border-secondary border-opacity-50 text-light" onchange="this.form.submit()">
+                        <option value="todas">Todas las Ligas / Competiciones</option>
+                        <% ligasDisponibles.forEach(l => { %>
+                            <option value="<%= l %>" <%= filtros.liga === l ? 'selected' : '' %>><%= l %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-dark border-secondary border-opacity-50 text-muted"><i class="bi bi-flag"></i></span>
+                    <select name="estado" class="form-select bg-dark border-secondary border-opacity-50 text-light" onchange="this.form.submit()">
+                        <option value="todos" <%= filtros.estado === 'todos' ? 'selected' : '' %>>Todos los Estados</option>
+                        <option value="Pendiente" <%= filtros.estado === 'Pendiente' ? 'selected' : '' %>>Pendientes</option>
+                        <option value="Acertada" <%= filtros.estado === 'Acertada' ? 'selected' : '' %>>Acertadas</option>
+                        <option value="Fallada" <%= filtros.estado === 'Fallada' ? 'selected' : '' %>>Falladas</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-12 col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-outline-success w-100"><i class="bi bi-funnel"></i> Filtrar</button>
+                <a href="/" class="btn btn-outline-secondary"><i class="bi bi-arrow-clockwise"></i></a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Lista de Predicciones -->
+    <% if (predictions.length === 0) { %>
+        <div class="text-center py-5 border border-dashed border-secondary rounded-4 bg-dark-subtle">
+            <i class="bi bi-dribbble text-muted display-4 mb-3 d-block"></i>
+            <h4 class="fw-bold">No hay pronósticos registrados</h4>
+            <p class="text-muted mb-3">Comienza simulando o registrando tu primer pronóstico de partido.</p>
+            <a href="/predictions/new" class="btn btn-success rounded-pill px-4">
+                <i class="bi bi-plus-lg me-1"></i> Crear Primer Pronóstico
+            </a>
+        </div>
+    <% } else { %>
+        <div class="row g-4">
+            <% predictions.forEach(item => { %>
+                <div class="col-12 col-lg-6">
+                    <div class="card bg-dark-subtle border-secondary border-opacity-50 h-100 shadow-sm hover-elevate">
+                        <div class="card-header bg-dark d-flex justify-content-between align-items-center py-2 border-secondary border-opacity-25">
+                            <span class="badge bg-secondary bg-opacity-25 text-light border border-secondary border-opacity-50 small">
+                                <i class="bi bi-trophy-fill text-warning me-1"></i><%= item.liga %>
+                            </span>
+                            <span class="badge <%= item.estado === 'Acertada' ? 'bg-success' : item.estado === 'Fallada' ? 'bg-danger' : 'bg-warning text-dark' %>">
+                                <%= item.estado %>
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <!-- Enfrentamiento y Marcador Predicho -->
+                            <div class="row align-items-center text-center py-2">
+                                <div class="col-5">
+                                    <h5 class="fw-bold mb-1 text-truncate" title="<%= item.equipoLocal %>"><%= item.equipoLocal %></h5>
+                                    <span class="text-muted small">Local</span>
+                                </div>
+                                <div class="col-2">
+                                    <div class="predicted-score-pill px-2 py-1 rounded bg-black border border-success border-opacity-50 text-success fw-bold fs-4">
+                                        <%= item.golesLocalPredicho %> - <%= item.golesVisitantePredicho %>
+                                    </div>
+                                    <span class="text-muted extra-small">Predicho</span>
+                                </div>
+                                <div class="col-5">
+                                    <h5 class="fw-bold mb-1 text-truncate" title="<%= item.equipoVisitante %>"><%= item.equipoVisitante %></h5>
+                                    <span class="text-muted small">Visitante</span>
+                                </div>
+                            </div>
+
+                            <!-- Resultado real si está disponible -->
+                            <% if (item.golesLocalReal !== null && item.golesVisitanteReal !== null) { %>
+                                <div class="alert alert-secondary py-1 px-2 my-2 text-center small mb-3">
+                                    <strong>Resultado Real:</strong> <%= item.equipoLocal %> <%= item.golesLocalReal %> - <%= item.golesVisitanteReal %> <%= item.equipoVisitante %>
+                                </div>
+                            <% } %>
+
+                            <!-- Barra de Probabilidades -->
+                            <div class="my-3">
+                                <div class="d-flex justify-content-between text-muted small mb-1">
+                                    <span>Local: <%= item.probabilidadLocal %>%</span>
+                                    <span>Empate: <%= item.probabilidadEmpate %>%</span>
+                                    <span>Visitante: <%= item.probabilidadVisitante %>%</span>
+                                </div>
+                                <div class="progress" style="height: 8px;">
+                                    <div class="progress-bar bg-success" style="width: <%= item.probabilidadLocal %>%" title="Local <%= item.probabilidadLocal %>%"></div>
+                                    <div class="progress-bar bg-secondary" style="width: <%= item.probabilidadEmpate %>%" title="Empate <%= item.probabilidadEmpate %>%"></div>
+                                    <div class="progress-bar bg-info" style="width: <%= item.probabilidadVisitante %>%" title="Visitante <%= item.probabilidadVisitante %>%"></div>
+                                </div>
+                            </div>
+
+                            <p class="text-muted small mb-3 text-truncate-2">
+                                <i class="bi bi-lightbulb text-warning me-1"></i><strong>Recomendación:</strong> <%= item.pronosticoRecomendado %>. <%= item.factorClave %>
+                            </p>
+
+                            <div class="text-muted extra-small mb-3">
+                                <i class="bi bi-clock me-1"></i><%= new Date(item.fechaPartido).toLocaleDateString('es-ES', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) %>
+                            </div>
+
+                            <!-- Acciones CRUD -->
+                            <div class="d-flex justify-content-end gap-2 pt-2 border-top border-secondary border-opacity-25">
+                                <a href="/predictions/<%= item._id %>" class="btn btn-outline-light btn-sm" title="Ver Detalle">
+                                    <i class="bi bi-eye"></i> Detalle
+                                </a>
+                                <a href="/predictions/<%= item._id %>/edit" class="btn btn-outline-warning btn-sm" title="Editar o Cargar Resultado">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                </a>
+                                <!-- Botón Eliminar con Modal -->
+                                <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal<%= item._id %>">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal de Confirmación de Borrado -->
+                <div class="modal fade" id="deleteModal<%= item._id %>" tabindex="-1" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content bg-dark border border-danger border-opacity-50">
+                            <div class="modal-header border-secondary border-opacity-25">
+                                <h5 class="modal-title text-danger"><i class="bi bi-exclamation-triangle-fill me-2"></i>Eliminar Pronóstico</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                ¿Estás seguro de que deseas eliminar la predicción de <strong><%= item.equipoLocal %> vs <%= item.equipoVisitante %></strong>? Esta acción no se puede deshacer.
+                            </div>
+                            <div class="modal-footer border-secondary border-opacity-25">
+                                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                                <form action="/predictions/<%= item._id %>?_method=DELETE" method="POST" class="d-inline">
+                                    <button type="submit" class="btn btn-danger btn-sm">Sí, Eliminar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+</main>
+
+<%- include('partials/footer') %>

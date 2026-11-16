@@ -1,0 +1,221 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<main class="container my-4 flex-grow-1" style="max-width: 900px;">
+    <%- include('partials/alerts') %>
+
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <a href="/" class="text-decoration-none text-muted small"><i class="bi bi-arrow-left me-1"></i> Volver al panel</a>
+            <h2 class="h3 fw-bold mt-1 mb-0"><i class="bi bi-magic text-success me-2"></i>Nueva Predicción Inteligente</h2>
+        </div>
+        <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 px-3 py-2">
+            Motor Predictivo v1.0
+        </span>
+    </div>
+
+    <div class="card bg-dark-subtle border-secondary border-opacity-50 shadow-lg rounded-4">
+        <div class="card-body p-4 p-md-5">
+            <form action="/predictions" method="POST" id="predictionForm">
+                
+                <h5 class="fw-semibold text-success mb-3 border-bottom border-secondary border-opacity-25 pb-2">
+                    <i class="bi bi-shield-shaded me-1"></i> 1. Selecciona los Equipos y Competición
+                </h5>
+
+                <div class="row g-3 mb-4">
+                    <!-- Equipo Local -->
+                    <div class="col-md-6">
+                        <label for="equipoLocal" class="form-label fw-semibold">
+                            <i class="bi bi-house-door-fill text-info me-1"></i> Equipo Local <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" list="equiposList" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               id="equipoLocal" name="equipoLocal" placeholder="Ej. Real Madrid, Arsenal..." 
+                               value="<%= formData.equipoLocal || '' %>" required>
+                    </div>
+
+                    <!-- Equipo Visitante -->
+                    <div class="col-md-6">
+                        <label for="equipoVisitante" class="form-label fw-semibold">
+                            <i class="bi bi-airplane-fill text-warning me-1"></i> Equipo Visitante <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" list="equiposList" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               id="equipoVisitante" name="equipoVisitante" placeholder="Ej. FC Barcelona, Liverpool..." 
+                               value="<%= formData.equipoVisitante || '' %>" required>
+                    </div>
+
+                    <!-- Datalist para sugerencias -->
+                    <datalist id="equiposList">
+                        <% equiposPopulares.forEach(eq => { %>
+                            <option value="<%= eq %>"></option>
+                        <% }) %>
+                    </datalist>
+
+                    <!-- Liga -->
+                    <div class="col-md-6">
+                        <label for="liga" class="form-label fw-semibold">
+                            <i class="bi bi-trophy-fill text-warning me-1"></i> Competición / Liga <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select bg-dark border-secondary border-opacity-50 text-light" id="liga" name="liga" required>
+                            <option value="UEFA Champions League">UEFA Champions League</option>
+                            <option value="LaLiga EA Sports">LaLiga EA Sports</option>
+                            <option value="Premier League">Premier League</option>
+                            <option value="Serie A">Serie A</option>
+                            <option value="Bundesliga">Bundesliga</option>
+                            <option value="Copa Libertadores">Copa Libertadores</option>
+                            <option value="Liga Profesional">Otra Liga Profesional</option>
+                        </select>
+                    </div>
+
+                    <!-- Fecha del Partido -->
+                    <div class="col-md-6">
+                        <label for="fechaPartido" class="form-label fw-semibold">
+                            <i class="bi bi-calendar3 me-1"></i> Fecha del Encuentro <span class="text-danger">*</span>
+                        </label>
+                        <input type="date" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               id="fechaPartido" name="fechaPartido" 
+                               value="<%= formData.fechaPartido || new Date().toISOString().split('T')[0] %>" required>
+                    </div>
+                </div>
+
+                <!-- Botón de Simulación con IA / Algoritmo -->
+                <div class="p-3 mb-4 rounded-3 bg-dark border border-success border-opacity-25 text-center">
+                    <p class="text-muted small mb-2">¿Quieres ver la estimación estadística antes de guardar?</p>
+                    <button type="button" class="btn btn-outline-success btn-sm px-4 rounded-pill" id="btnSimular">
+                        <i class="bi bi-cpu-fill me-1"></i> Calcular y Previsualizar con IA
+                    </button>
+                    
+                    <!-- Previsualización Dinámica -->
+                    <div id="simulacionPreview" class="mt-3 d-none">
+                        <div class="card bg-dark-subtle border-success border-opacity-50 p-3">
+                            <div class="row align-items-center text-center">
+                                <div class="col-4 fw-bold" id="prevLocal">Local</div>
+                                <div class="col-4">
+                                    <span class="badge bg-success fs-5 px-3 py-2" id="prevMarcador">0 - 0</span>
+                                </div>
+                                <div class="col-4 fw-bold" id="prevVisitante">Visitante</div>
+                            </div>
+                            <div class="mt-3">
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar bg-success" id="prevBarLocal" style="width: 33%"></div>
+                                    <div class="progress-bar bg-secondary" id="prevBarEmpate" style="width: 34%"></div>
+                                    <div class="progress-bar bg-info" id="prevBarVisitante" style="width: 33%"></div>
+                                </div>
+                                <div class="d-flex justify-content-between small text-muted mt-1">
+                                    <span id="prevTextLocal">Local: 33%</span>
+                                    <span id="prevTextEmpate">Empate: 34%</span>
+                                    <span id="prevTextVisitante">Visitante: 33%</span>
+                                </div>
+                            </div>
+                            <div class="text-start mt-2 p-2 rounded bg-dark small" id="prevAnalisis"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <h5 class="fw-semibold text-success mb-3 border-bottom border-secondary border-opacity-25 pb-2">
+                    <i class="bi bi-sliders me-1"></i> 2. Parámetros del Pronóstico
+                </h5>
+
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" role="switch" id="usarAlgoritmo" name="usarAlgoritmo" checked>
+                    <label class="form-check-label fw-semibold" for="usarAlgoritmo">
+                        Calcular automáticamente marcador y probabilidades con el motor predictivo al guardar
+                    </label>
+                    <div class="form-text text-muted">
+                        Si desactivas esta opción, puedes ingresar manualmente tu propio marcador predicho.
+                    </div>
+                </div>
+
+                <div class="row g-3 mb-4" id="manualInputs" style="display: none;">
+                    <div class="col-md-6">
+                        <label for="golesLocalPredicho" class="form-label">Goles Predichos Local</label>
+                        <input type="number" min="0" max="15" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               id="golesLocalPredicho" name="golesLocalPredicho" placeholder="Ej. 2">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="golesVisitantePredicho" class="form-label">Goles Predichos Visitante</label>
+                        <input type="number" min="0" max="15" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               id="golesVisitantePredicho" name="golesVisitantePredicho" placeholder="Ej. 1">
+                    </div>
+                    <div class="col-12">
+                        <label for="factorClave" class="form-label">Factor Clave o Justificación Personal</label>
+                        <input type="text" class="form-control bg-dark border-secondary border-opacity-50 text-light" 
+                               id="factorClave" name="factorClave" placeholder="Ej. Lesión del delantero titular y racha de victorias...">
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-3 pt-3 border-top border-secondary border-opacity-25">
+                    <a href="/" class="btn btn-outline-secondary px-4">Cancelar</a>
+                    <button type="submit" class="btn btn-success px-4 fw-semibold">
+                        <i class="bi bi-check-circle-fill me-1"></i> Guardar Predicción
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<script>
+    // Toggle manual vs automatic inputs
+    const switchAlgoritmo = document.getElementById('usarAlgoritmo');
+    const manualInputs = document.getElementById('manualInputs');
+
+    switchAlgoritmo.addEventListener('change', () => {
+        manualInputs.style.display = switchAlgoritmo.checked ? 'none' : 'flex';
+    });
+
+    // Simulación interactiva con AJAX
+    const btnSimular = document.getElementById('btnSimular');
+    const simulacionPreview = document.getElementById('simulacionPreview');
+
+    btnSimular.addEventListener('click', async () => {
+        const local = document.getElementById('equipoLocal').value.trim();
+        const visitante = document.getElementById('equipoVisitante').value.trim();
+        const liga = document.getElementById('liga').value;
+
+        if (!local || !visitante) {
+            alert('Por favor escribe el nombre de ambos equipos primero.');
+            return;
+        }
+
+        btnSimular.disabled = true;
+        btnSimular.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Calculando probabilidades...';
+
+        try {
+            const res = await fetch(`/api/simulate?local=${encodeURIComponent(local)}&visitante=${encodeURIComponent(visitante)}&liga=${encodeURIComponent(liga)}`);
+            const data = await res.json();
+
+            if (res.ok) {
+                document.getElementById('prevLocal').innerText = local;
+                document.getElementById('prevVisitante').innerText = visitante;
+                document.getElementById('prevMarcador').innerText = `${data.golesLocalPredicho} - ${data.golesVisitantePredicho}`;
+                
+                document.getElementById('prevBarLocal').style.width = data.probabilidadLocal + '%';
+                document.getElementById('prevBarEmpate').style.width = data.probabilidadEmpate + '%';
+                document.getElementById('prevBarVisitante').style.width = data.probabilidadVisitante + '%';
+
+                document.getElementById('prevTextLocal').innerText = `Local: ${data.probabilidadLocal}%`;
+                document.getElementById('prevTextEmpate').innerText = `Empate: ${data.probabilidadEmpate}%`;
+                document.getElementById('prevTextVisitante').innerText = `Visitante: ${data.probabilidadVisitante}%`;
+
+                document.getElementById('prevAnalisis').innerHTML = `<strong>Pronóstico:</strong> ${data.pronosticoRecomendado}. ${data.analisis}`;
+
+                // Autocompletar campos manuales por si el usuario decide editar
+                document.getElementById('golesLocalPredicho').value = data.golesLocalPredicho;
+                document.getElementById('golesVisitantePredicho').value = data.golesVisitantePredicho;
+                document.getElementById('factorClave').value = data.factorClave;
+
+                simulacionPreview.classList.remove('d-none');
+            } else {
+                alert(data.error || 'Error en la simulación.');
+            }
+        } catch (err) {
+            console.error(err);
+            alert('Error de conexión al simular.');
+        } finally {
+            btnSimular.disabled = false;
+            btnSimular.innerHTML = '<i class="bi bi-cpu-fill me-1"></i> Calcular y Previsualizar con IA';
+        }
+    });
+</script>
+
+<%- include('partials/footer') %>
