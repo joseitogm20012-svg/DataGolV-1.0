@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Informe Técnico - Proyecto 1: DataGol</title>
+    <style>
+        @page {
+            size: letter;
+            margin: 1.8cm 1.5cm;
+            @bottom-right {
+                content: counter(page);
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            color: #1e293b;
+            line-height: 1.55;
+            font-size: 10.5pt;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Encabezado Institucional */
+        .header-box {
+            border-bottom: 2px solid #16a34a;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-left h1 {
+            font-size: 20pt;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 4px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header-left .subtitle {
+            font-size: 11pt;
+            color: #16a34a;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .header-right {
+            text-align: right;
+            font-size: 9pt;
+            color: #64748b;
+            line-height: 1.4;
+        }
+
+        /* Tarjeta de Autores */
+        .authors-card {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-left: 4px solid #16a34a;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .authors-list {
+            display: flex;
+            gap: 30px;
+        }
+
+        .author-item {
+            font-size: 10pt;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .author-id {
+            color: #64748b;
+            font-size: 9pt;
+        }
+
+        .repo-link {
+            font-size: 9pt;
+            text-align: right;
+        }
+
+        .repo-link a {
+            color: #0284c7;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* Secciones */
+        h2 {
+            font-size: 12.5pt;
+            color: #0f172a;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 4px;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        h2 span.num {
+            background-color: #16a34a;
+            color: #ffffff;
+            font-size: 9pt;
+            padding: 2px 7px;
+            border-radius: 4px;
+            margin-right: 8px;
+            font-weight: 700;
+        }
+
+        p {
+            margin: 0 0 10px 0;
+            text-align: justify;
+        }
+
+        ul {
+            margin: 0 0 12px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 6px;
+            text-align: justify;
+        }
+
+        strong {
+            color: #0f172a;
+        }
+
+        /* Bloques de Código y Carpetas */
+        .code-box {
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-family: 'Consolas', 'Courier New', monospace;
+            font-size: 8.5pt;
+            padding: 10px 14px;
+            border-radius: 6px;
+            line-height: 1.45;
+            margin: 10px 0;
+        }
+
+        /* Tabla de Rúbrica */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 9pt;
+        }
+
+        th, td {
+            padding: 7px 10px;
+            border: 1px solid #cbd5e1;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            font-weight: 700;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        .badge-pill {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 8pt;
+            font-weight: 600;
+            border-radius: 999px;
+            background-color: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <div class="header-box">
+        <div class="header-left">
+            <h1>DataGol &bull; Informe Técnico</h1>
+            <p class="subtitle">Proyecto 1: Arquitectura MVC & Bases de Datos NoSQL</p>
+        </div>
+        <div class="header-right">
+            <strong>Asignatura:</strong> Programación III<br>
+            <strong>Periodo Académico:</strong> 2026<br>
+            <strong>Stack:</strong> Node.js &bull; Express &bull; MongoDB &bull; EJS
+        </div>
+    </div>
+
+    <!-- Autores -->
+    <div class="authors-card">
+        <div class="authors-list">
+            <div class="author-item">
+                <div class="author-name">Jose Gonzalez</div>
+                <div class="author-id">C.I.: 33.372.461</div>
+            </div>
+            <div class="author-item">
+                <div class="author-name">Yadier Montilva</div>
+                <div class="author-id">C.I.: 31.758.670</div>
+            </div>
+        </div>
+        <div class="repo-link">
+            <span>Repositorio GitHub:</span><br>
+            <a href="https://github.com/joseitogm20012-svg/DataGolV-1.0">github.com/joseitogm20012-svg/DataGolV-1.0</a>
+        </div>
+    </div>
+
+    <!-- 1. Introducción -->
+    <h2><span class="num">1</span> Introducción y Selección de la Entidad</h2>
+    <p>
+        Para el desarrollo de este primer proyecto práctico, se nos planteó el reto de diseñar e implementar desde cero una aplicación web estructurada bajo el patrón de arquitectura <strong>MVC (Modelo-Vista-Controlador)</strong>, conectada a una base de datos <strong>No Relacional (NoSQL)</strong> y con un flujo <strong>CRUD completo</strong>.
+    </p>
+    <p>
+        En lugar de elegir las entidades convencionales como listas de tareas o catálogos simples de productos, optamos por un dominio más dinámico y retador: <strong>DataGol</strong>, un gestor inteligente de predicciones de partidos de fútbol. Nuestra entidad principal es <code>Prediction</code> (Pronóstico de Partido), la cual modela los equipos enfrentados, la competición, la fecha, las estimaciones porcentuales de victoria/empate, el marcador proyectado y el seguimiento del resultado final oficial.
+    </p>
+
+    <!-- 2. Lenguaje y Entorno -->
+    <h2><span class="num">2</span> Justificación del Entorno: Node.js y Express</h2>
+    <ul>
+        <li><strong>Unificación tecnológica (JavaScript Full Stack):</strong> Seleccionamos <strong>Node.js</strong> porque nos permite trabajar con JavaScript tanto en el servidor como en los scripts del cliente y plantillas. Esto evita la fricción de cambiar de sintaxis entre el backend y frontend.</li>
+        <li><strong>Arquitectura orientada a eventos no bloqueante:</strong> El motor V8 de Node.js gestiona las solicitudes HTTP y las operaciones de base de datos de manera asíncrona, garantizando alta velocidad de respuesta sin sobrecargar el servidor.</li>
+        <li><strong>Express.js como Framework Web:</strong> Proporciona una capa ligera y flexible para administrar rutas HTTP (GET, POST, PUT, DELETE) y middlewares, facilitando una división limpia de carpetas sin imponer restricciones rígidas.</li>
+    </ul>
+
+    <!-- 3. Base NoSQL -->
+    <h2><span class="num">3</span> Justificación de la Base NoSQL: MongoDB Atlas & Mongoose</h2>
+    <p>
+        El enunciado del proyecto establece como requisito obligatorio el uso de una base de datos NoSQL. Nuestra decisión técnica se basó en los siguientes puntos:
+    </p>
+    <ul>
+        <li><strong>Estructura flexible orientada a documentos (BSON/JSON):</strong> La información de un partido de fútbol encaja perfectamente en un documento JSON: métricas probabilísticas, factores clave de análisis y estados mutables (<em>Pendiente &rarr; Acertada / Fallada</em>).</li>
+        <li><strong>Despliegue en la nube con MongoDB Atlas:</strong> Implementamos un clúster en la nube a través de MongoDB Atlas. Esto elimina la necesidad de configurar servicios locales en cada máquina, garantiza alta disponibilidad y permite que el proyecto sea probado inmediatamente por cualquier evaluador al clonar el repositorio.</li>
+        <li><strong>Validación estricta con Mongoose ODM:</strong> Para asegurar la consistencia requerida, implementamos un esquema con validaciones nativas:
+            <ul>
+                <li>Obligatoriedad y longitud mínima en nombres de equipos.</li>
+                <li>Validación personalizada para impedir que el equipo local sea igual al visitante.</li>
+                <li>Restricciones numéricas que impiden registrar goles o probabilidades negativas.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <div class="page-break"></div>
+
+    <!-- 4. Motor de Plantillas -->
+    <h2><span class="num">4</span> Justificación del Motor de Plantillas: EJS</h2>
+    <p>
+        Elegimos <strong>EJS (Embedded JavaScript)</strong> por encima de otras opciones como Pug o Handlebars debido a:
+    </p>
+    <ul>
+        <li><strong>Sintaxis natural basada en HTML estándar:</strong> EJS conserva la estructura tradicional de etiquetas HTML, insertando código de servidor únicamente donde se necesita mediante etiquetas <code>&lt;%= %&gt;</code>. Esto evita los errores comunes de indentación propios de otros motores.</li>
+        <li><strong>Componentización modular (Partials):</strong> Dividimos la interfaz en fragmentos reutilizables (<code>partials/header.ejs</code>, <code>navbar.ejs</code>, <code>footer.ejs</code>, <code>alerts.ejs</code>), aplicando el principio DRY (<em>Don't Repeat Yourself</em>) y facilitando el mantenimiento global del diseño.</li>
+    </ul>
+
+    <!-- 5. Arquitectura MVC -->
+    <h2><span class="num">5</span> Estructura y Separación de Capas (MVC)</h2>
+    <p>
+        El proyecto respeta de manera estricta la separación de responsabilidades solicitada por la cátedra:
+    </p>
+
+    <div class="code-box">
+PROYECTOPROGRAMACION III/
+├── config/             # Conexión a MongoDB Atlas (db.js)
+├── models/             # Esquema y validaciones de datos (Prediction.js)
+├── controllers/        # Lógica de negocio y control del CRUD (predictionController.js)
+├── routes/             # Enrutamiento semántico REST (predictionRoutes.js)
+├── utils/              # Algoritmo de cálculo de probabilidades (predictionEngine.js)
+├── views/              # Vistas dinámicas en EJS (index, create, edit, details, error)
+├── public/             # Recursos estáticos (CSS personalizado, Bootstrap 5)
+├── .env.example        # Plantilla de variables de entorno
+└── app.js              # Inicialización del servidor Express
+    </div>
+
+    <ul>
+        <li><strong>Model (<code>models/Prediction.js</code>):</strong> Define la estructura del documento en MongoDB y ejecuta las reglas de integridad de datos.</li>
+        <li><strong>Controller (<code>controllers/predictionController.js</code>):</strong> Contiene la lógica del negocio: consulta a la base de datos, calcula los KPIs del dashboard, procesa las solicitudes del usuario y decide qué vista renderizar.</li>
+        <li><strong>Routes (<code>routes/predictionRoutes.js</code>):</strong> Mapea las URLs con los métodos del controlador. Utiliza el middleware <code>method-override</code> para soportar verbos <code>PUT</code> y <code>DELETE</code> directamente desde formularios web.</li>
+        <li><strong>View (<code>views/</code>):</strong> Despliega la información procesada sin interactuar jamás directamente con la base de datos.</li>
+    </ul>
+
+    <!-- 6. Lógica de Negocio Extra -->
+    <h2><span class="num">6</span> Lógica de Negocio: Motor Estadístico de Predicción</h2>
+    <p>
+        Para enriquecer la aplicación más allá de un CRUD básico, implementamos en <code>utils/predictionEngine.js</code> un algoritmo de simulación deportiva:
+    </p>
+    <ul>
+        <li>Analiza los índices de poder ofensivo y defensivo de los equipos enfrentados.</li>
+        <li>Aplica un factor ponderado por <strong>ventaja de localía</strong> (+6% al rendimiento del anfitrión).</li>
+        <li>Calcula probabilidades normalizadas de victoria local, empate y visitante (sumando exactamente el 100%).</li>
+        <li>Ofrece un endpoint <code>/api/simulate</code> que permite al usuario ver la simulación en tiempo real mediante peticiones asíncronas (AJAX) antes de almacenar el pronóstico.</li>
+        <li>Evalúa de forma automática si un pronóstico fue <strong>Acertado</strong> o <strong>Fallado</strong> al momento de cargar el marcador oficial en la vista de edición.</li>
+    </ul>
+
+    <!-- 7. Tabla Resumen -->
+    <h2><span class="num">7</span> Resumen de Cumplimiento de Requerimientos</h2>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 32%;">Requisito del Proyecto</th>
+                <th style="width: 48%;">Implementación Técnica</th>
+                <th style="width: 20%; text-align: center;">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Arquitectura MVC</strong></td>
+                <td>Carpetas <code>models/</code>, <code>views/</code>, <code>controllers/</code>, <code>routes/</code> independientes.</td>
+                <td style="text-align: center;"><span class="badge-pill">Cumplido</span></td>
+            </tr>
+            <tr>
+                <td><strong>Base de Datos NoSQL</strong></td>
+                <td>MongoDB Atlas en la nube con Mongoose ODM y validaciones de integridad.</td>
+                <td style="text-align: center;"><span class="badge-pill">Cumplido</span></td>
+            </tr>
+            <tr>
+                <td><strong>Motor de Plantillas</strong></td>
+                <td>EJS con vistas dinámicas, diseño deportivo en modo oscuro y partials.</td>
+                <td style="text-align: center;"><span class="badge-pill">Cumplido</span></td>
+            </tr>
+            <tr>
+                <td><strong>Enrutamiento HTTP</strong></td>
+                <td>Rutas completas con GET, POST, PUT y DELETE en <code>predictionRoutes.js</code>.</td>
+                <td style="text-align: center;"><span class="badge-pill">Cumplido</span></td>
+            </tr>
+            <tr>
+                <td><strong>Operaciones CRUD</strong></td>
+                <td>Creación con simulación IA, listado con filtros y KPIs, edición y eliminación.</td>
+                <td style="text-align: center;"><span class="badge-pill">Cumplido</span></td>
+            </tr>
+            <tr>
+                <td><strong>Manejo de Errores</strong></td>
+                <td>Alertas visuales de validación, páginas personalizadas para errores 404 y 500.</td>
+                <td style="text-align: center;"><span class="badge-pill">Cumplido</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
